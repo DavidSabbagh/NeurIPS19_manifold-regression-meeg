@@ -17,19 +17,19 @@ Dependencies
 Libraries
 ---------
 
-- **/library/generation.py** contains the functions to generate covariance matrices following the generative model of the paper
+- **library/preprocessing.py** contains the code used to preprocess raw data from CamCAN
 
-- **/library/wasserstein_tangent.py** implements the vectorization with the Wasserstein distance.
-Vectorization using the geometric distance is performed using the PyRiemann package.
+- **/library/spfiltering.py** contains the functions to implement spatial filtering of the covariance matrices
+
+- **/library/featuring.py** contains all the functions to vectorize the covariance matrices 
+
+- **library/simuls**: contains the function to  generate covariance matrices following the generative model of the paper
 
 - **/library/utils.py** contains the other vectorization methods
 
 Main scripts
 -------------
-The SNR analysis is obtained by running the script snr_experiment.py
 
-The distance analysis is obtained by running the script distance_experiment.py
-
-The individual mixing matrices is obtained by running the script
-individual_noise_experiment.py
-
+- **nips_simuls_compute_** are the 3 scripts used for the 3 simulations of the paper
+ 
+- **nips_simuls_plot_** are the corresponding plotting scripts (in R)
