@@ -7,18 +7,18 @@ from sklearn.utils import check_random_state
 
 def generate_covariances(n_matrices, n_channels, n_sources, rank=None,
                          distance_A_id=0., direction_A=None,
-                         distance_projs=0., sigma=0,
+                         distance_projs=0., sigma=0.,
                          noise_A=0., f_p='log', rng=0):
     rng = check_random_state(rng)
     project = rank is not None
     # Generate A close from id
     if direction_A is None:
         direction_A = rng.randn(n_channels, n_channels)
+        direction_A /= np.linalg.norm(direction_A)
     A = expm(distance_A_id * direction_A)
     # Add individual noise
-    if noise_A != 0.:
-        A_list = [A + noise_A * rng.randn(n_channels, n_channels)
-                  for _ in range(n_matrices)]
+    A_list = [A + noise_A * rng.randn(n_channels, n_channels)
+              for _ in range(n_matrices)]
     # Generate powers
     powers = rng.rand(n_matrices, n_sources)
     # Generate source covariances

@@ -20,13 +20,12 @@ print('Running distance experiment...')
 n_matrices = 100  # Number of matrices
 n_channels = 5   # Number of channels
 n_sources = 2  # Number of sources
-sigma = 0  # .31  Noise level in y
+distances = np.linspace(0.001, 3, 10)  # Parameter 'mu': distance from A to Id
 f_powers = 'log'  # link function between the y and the source powers
-# Direction for the change in A
-direction_A = np.random.RandomState(4).randn(n_channels, n_channels)
-direction_A /= np.linalg.norm(direction_A)
-rng = 5
-distances = np.linspace(0.001, 3, 10)
+direction_A = None  # random direction_1
+rng = 4
+sigma = 0.  # Noise level in y
+noise_A = 0.
 scoring = 'neg_mean_absolute_error'
 
 # define spatial filters
@@ -51,13 +50,13 @@ pipelines = {
     'wass': make_pipeline(identity, wass, sc, ridge)
 }
 
-# Run experiments
+# Run simulation
 results = np.zeros((len(pipelines), len(distances)))
 for j, distance_A_id in enumerate(distances):
     X, y = generate_covariances(n_matrices, n_channels, n_sources,
                                 sigma=sigma, distance_A_id=distance_A_id,
                                 f_p=f_powers, direction_A=direction_A,
-                                rng=rng)
+                                noise_A=noise_A, rng=rng)
     X = X[:, None, :, :]
     for i, (name, pipeline) in enumerate(pipelines.items()):
         print('distance = {}, {} method'.format(distance_A_id, name))

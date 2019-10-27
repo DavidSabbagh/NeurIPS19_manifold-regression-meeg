@@ -20,20 +20,18 @@ print('Running SNR experiment...')
 n_matrices = 100  # Number of matrices
 n_channels = 5   # Number of channels
 n_sources = 2  # Number of sources
-distance_A_id = .3  # Parameter 'mu': distance from A to Id
+distance_A_id = 1.0  # Parameter 'mu': distance from A to Id
 f_powers = 'log'  # link function between the y and the source powers
 direction_A = None  # random direction_A
 rng = 4
-sigmas = np.logspace(-2, 1, 10)  # noise level in y
+sigmas = np.logspace(-2, 1.4, 10)  # noise level in y
+noise_A = 0.
 scoring = 'neg_mean_absolute_error'
 
 # define spatial filters
 identity = ProjIdentitySpace()
-#  spoc = ProjSPoCSpace(n_compo=n_channels, scale='auto', reg=0, shrink=0)
 
 # define featuring
-#  upper = NaiveVec(method='upper')
-#  diag = Diag()
 logdiag = LogDiag()
 geom = Riemann(n_fb=1, metric='riemann')
 wass = RiemannSnp(n_fb=1, rank=n_channels)
@@ -43,7 +41,6 @@ sc = StandardScaler()
 # define algo
 dummy = DummyRegressor()
 ridge = RidgeCV(alphas=np.logspace(-7, 3, 100), scoring=scoring)
-#  ridge = RidgeCV(alphas=np.logspace(-3, 5, 100), scoring=scoring)
 
 # define models
 pipelines = {
@@ -59,7 +56,7 @@ for j, sigma in enumerate(sigmas):
     X, y = generate_covariances(n_matrices, n_channels, n_sources,
                                 sigma=sigma, distance_A_id=distance_A_id,
                                 f_p=f_powers, direction_A=direction_A,
-                                rng=rng)
+                                noise_A=noise_A, rng=rng)
     X = X[:, None, :, :]
     for i, (name, pipeline) in enumerate(pipelines.items()):
         print('sigma = {}, {} method'.format(sigma, name))
